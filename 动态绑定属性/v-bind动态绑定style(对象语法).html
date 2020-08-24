@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <div id="app">
+<!--   finalSize当成一个变量使用，  'red' 必须加上引号，不然当成变量值去解析   -->
+        <h2 :style="{fontsize:finalSize+ 'px',backgroundColor: 'red'}">  {{message}}  </h2>
+<!--        将样式抽取出来放在methods中-->
+        <h2 :style="getStyles()">  {{message}}  </h2>
+
+
+    </div>
+</div>
+<script src="../static/js/vue.js"></script>
+<script>
+    const app=new Vue({
+        el:"#app",
+        data:{
+            message:"你好哇",
+            finalSize: 50 ,
+            backgroundColor: 'green'
+        },
+        methods:{
+
+            getStyles(){
+                return { fontsize: this.finalSize+ 'px',backgroundColor: 'red'}
+            }
+        }
+    })
+</script>
+
+</body>
+</html>

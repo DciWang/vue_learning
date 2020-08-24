@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<button>按钮1</button>
+<button>按钮2</button>
+<button>按钮3</button>
+<button>按钮4</button>
+<button>按钮5</button>
+
+<script>
+<!--    ES6引入作用域变量let, const-->
+    //建议
+    const buttons =document.getElementsByName('button');
+    for (let i=0;i<buttons.length;i++){
+        buttons[i].addEventListener('click',function () {
+            console.log("第"+i+'个键被点击');
+        })
+    }
+</script>
+
+
+
+</body>
+</html>

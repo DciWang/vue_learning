@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+    .active{
+        color: brown
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title>v-for Test</title>
+    <script src="js/vue.js"></script>
+</head>
+<body>
+<div id="box">
+    <div>
+        <h2 :class="{active:isActive,isLine:false}">当前计数：{{count}}</h2>
+        <button v-on:click="add()">+</button>
+        <button @click="sub()">-</button>
+        <ul>
+            <li v-for="item in datalist" :key="item.id">
+                {{item}}
+            </li>
+        </ul>
+    </div>
+
+
+</div>
+
+<script>
+    const app=new Vue({
+        el:"#box",
+        data:{
+            datalist:[{'id':'1',"name":"DciWang","age":"25"},
+                {'id':'2',"name":"西瓜","age":"25"},
+                {'id':'3',"name":"donkey","age":"25"}],
+            count:0,
+            isActive:true,
+            isLine:true
+
+        },
+        methods:{
+            add(){
+                this.count++ ,this.isActive=!this.isActive;
+            },
+            sub(){
+                this.count--
+            }
+        }
+    })
+</script>
+
+
+</body>
+</html>

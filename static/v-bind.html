@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>tittle</title>
+    <style>
+        .active{
+            color: brown;
+        }
+    </style>
+</head>
+<body>
+
+<div>
+    <div id="app">
+        <ul>
+            <li v-for="item  of dataList" :key="item.index" @click="handClick()" class="{active:isActive}">
+                {{item}}
+            </li>
+        </ul>
+    </div>
+</div>
+<script src="js/vue.js"></script>
+<script>
+    const app=new Vue({
+        el:"#app",
+        data:{
+            dataList:["aaaaaa","bbbbbb","cccccc","dddddd"],
+            isActive:true
+        },
+        methods:{
+            click(){
+                this.isActive=!this.isActive
+
+            }
+
+        }
+    })
+</script>
+</body>
+</html>
