@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <div>
+<!--计算属性是把函数名当属性来用的，不用加括号，相对于methods的方法，计算属性是有缓存的-->
+        <h2>{{fullName}}</h2>
+    </div>
+</div>
+<script src="../static/js/vue.js"></script>
+<script>
+    const app = new Vue({
+        el: "#app",
+        data: {
+            fistName: "brant",
+            lastName: "kobe",
+        },
+        methods: {},
+        computed: {
+            //计算属性里面其实是有他getter和setter方法的，只不过一般不写set方法(只读属性)
+            fullName(){
+                return this.lastName+''+this.fistName;
+            }
+        }
+    })
+</script>
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>计算属性的复杂使用</title>
+    <style>
+        .active{
+            color: aqua;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div>
+        <ul>
+            <li v-for="book in books" :key="book.id" :class="{active:isActive}">书籍：{{ book.name}} ---------------- 价格： {{ book.price}}  </li>
+        </ul>
+        <button @click="handClick()">
+            点击变色
+        </button>
+        <h2>总价：{{totalPrice}}</h2>
+    </div>
+</div>
+<script src="../static/js/vue.js"></script>
+<script>
+    const app = new Vue({
+        el: "#app",
+        data: {
+            books: [
+                {id: 1, name: "深入浅出springboot", price: 100},
+                {id: 2, name: "jvm", price: 98},
+                {id: 3, name: "代码大全", price: 120},
+                {id: 4, name: "深入理解计算机原理", price: 130},
+                {id: 5, name: "现代操作系统", price: 77}
+            ],
+            isActive:true
+        },
+        methods: {
+            handClick(){
+
+            }
+        },
+        computed: {
+
+            totalPrice() {
+                let result = 0;
+                for (let i of this.books) {
+                    result += i.price
+                }
+                return result;
+            }
+
+        }
+
+    })
+</script>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- v-on: 等同于 @-->
+<div id="app">
+    <div>
+        <h2>{{message}}</h2>
+        <!--当没有传递参数时有括号和没括号是一样的-->
+        <button v-on:click="click1">按钮1</button>
+        <button @click="click1()">按钮1</button>
+        <!--当函数接受一个参数，但事件没传参数(没括号)时，相当于传了￥event参数-->
+        <button @click="click2">按钮2</button>
+        <button @click="click2($event)">按钮2</button>
+        <!-- 如果字符型参数没有加引号，则必须在属性中定义，$event为鼠标点击属性-->
+        <button @click="click3('wdc',$event)">按钮2</button>
+    </div>
+</div>
+<script src="../static/js/vue.js"></script>
+<script>
+    const app =new Vue({
+        el:"#app",
+        data:{
+            message:"你好哇！",
+        },
+        methods:{
+            click1() {
+                console.log("hello")
+            },
+            click2(event) {
+                console.log(event)
+            },
+            click3(name,event) {
+                console.log(name,event)
+            }
+        },
+        computed:{
+
+        }
+
+    })
+</script>
+
+</body>
+</html>

@@ -13,7 +13,10 @@
 
 <script>
 <!--    ES6引入作用域变量let, const-->
-    //建议
+    //建议在ES6开发中优先使用const，只有需要改变某一个标识符的时候采用let
+    //一旦给const修饰的标识符赋值以后，不能修改
+    //在使用const修饰的标识符，必须赋值
+    //常量的含义是指向对象不能修改，但是可以修改对象内部的属性
     const buttons =document.getElementsByName('button');
     for (let i=0;i<buttons.length;i++){
         buttons[i].addEventListener('click',function () {

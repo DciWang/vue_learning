@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <div>
+        <h2>{{message}}</h2>
+    </div>
+</div>
+<script src="js/vue.js"></script>
+<script>
+    const app = new Vue({
+        el: "#app",
+        data: {
+            message: "你好哇！",
+        },
+        methods: {
+            /*ES5函数写法*/
+            abc: function () {
+                console.log("")
+            },
+            /*ES6函数写法*/
+            def(){
+                console.log("")
+            }
+
+        },
+        computed: {}
+
+    })
+</script>
+<script>
+
+
+    const id = 1;
+    const name = "kebe";
+    const age = 18;
+    <!--    ES5 对象写法-->
+    const user = {
+        id: id,
+        name: name,
+        age: age
+    }
+    <!--    ES6 对象写法-->
+    const person = {
+        id,
+        name,
+        age
+    };
+
+</script>
+
+</body>
+</html>
