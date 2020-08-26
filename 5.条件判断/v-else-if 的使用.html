@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <div>
+        <h2 v-if="result>90">{{Nine}}</h2>
+        <h2 v-else-if="result>60">{{Six}}</h2>
+        <h2 v-else>{{Other}}</h2>
+    </div>
+    <h1>{{item}}</h1>
+</div>
+<script src="../static/js/vue.js"></script>
+<script>
+    const app =new Vue({
+        el:"#app",
+        data:{
+            result:95,
+            message:"你好哇！",
+            Nine:"优秀",
+            Six:"及格",
+            Other:"不及格"
+        },
+        methods:{
+
+        },
+        //一般用计算属性的方式代替，在计算属性里面判断
+        computed:{
+            item(){
+                let  node='';
+                if (this.result>90){
+                    node="优秀";
+                }else if (this.result>60){
+                    node='及格'
+                }else {
+                    node='不及格'
+                }
+                return node;
+            }
+        }
+
+    })
+</script>
+
+</body>
+</html>

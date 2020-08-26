@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <div>
+        <h2 v-if="isShow" @click="ifelse()">{{message}}</h2>
+        <h2 v-else @click="ifelse()">{{node}}</h2>
+    </div>
+</div>
+<script src="../static/js/vue.js"></script>
+<script>
+    const app =new Vue({
+        el:"#app",
+        data:{
+            message:"你好哇！",
+            node:"李银河。",
+            isShow:true
+        },
+        methods:{
+            ifelse(){
+                this.isShow=!this.isShow;
+            }
+        },
+        computed:{
+
+        }
+
+    })
+</script>
+
+</body>
+</html>
