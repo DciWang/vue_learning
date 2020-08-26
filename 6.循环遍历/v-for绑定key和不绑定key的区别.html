@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <div>
+        <!--如果不加key，添加数据的时候跟java中数组中添加数据道理相似，性能差，加了key，则直接添加，一一对应  -->
+        <ul>
+            <li v-for="(item,index) in dataList" :key="item">{{index+1}}.{{item}}</li>
+        </ul>
+    {{message}}
+    </div>
+</div>
+<script src="../static/js/vue.js"></script>
+<script>
+    const app=new Vue({
+        el:"#app",
+        data:{
+            message:"你好哇",
+            dataList:[1,2,3,4,5]
+        },
+        methods:{
+
+        }
+    })
+</script>
+
+</body>
+</html>
