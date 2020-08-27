@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <div>
+        <h2>{{message}}</h2>
+        <ul>
+            <li v-for="item in dataList">{{item}}</li>
+            <button @click="btnClick()">操作</button>
+        </ul>
+    </div>
+</div>
+<script src="../static/js/vue.js"></script>
+<script>
+    const app =new Vue({
+        el:"#app",
+        data:{
+            message:"你好哇！",
+            dataList:['q','w','e','r','t']
+        },
+        methods:{
+            btnClick(){
+                /*在数组后面添加元素*/
+                this.dataList.push('a','r','f');
+            /*删除数组后面的一个元素*/
+                this.dataList.pop();
+                /*删除数组的第一个元素*/
+                this.dataList.shift();
+                /*在数组前面添加元素*/
+                this.dataList.unshift('a','s','d');
+                /*splice作用：删除元素，插入元素，替换元素*/
+                //删除元素：第一个参数传从第几个元素开始，第二个参数传入你要删除几个元素，如果第二个参数为0，则删除第一个参数对应元素的全部元素
+                this.dataList.splice(0,2);
+            //替换元素：第一个参数传从第几个元素开始，第二个参数表示替换几个元素，后面的参数是用于替换前面的元素
+                this.dataList.splice(0,2,'i','o','p');
+            // 插入元素：第一个参数传从第几个元素开始，第二个元素为0，后面跟要插入的元素
+                this.dataList.splice(2,0,'i','o','p');
+            }
+        },
+        computed:{
+
+        }
+
+    })
+</script>
+
+</body>
+</html>
