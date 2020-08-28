@@ -7,7 +7,8 @@
 </head>
 <body>
 <div id="app">
-    <table>
+    <div v-if="books.length>0">
+        <table>
         <thead>
         <tr>
             <th></th>
@@ -23,18 +24,22 @@
             <td>{{item.id}}</td>
             <td>{{item.name}}</td>
             <td>{{item.date}}</td>
-<!--            过滤，将｜前面的当作参数-->
+            <!--            过滤，将｜前面的当作参数-->
             <td>{{item.price | showPrice()}}</td>
             <td>
                 <button @click="decrementBtn(index)" :disabled="item.count<=1">-</button>
                 {{item.count}}
                 <button @click="incrementBtn(index)">+</button>
             </td>
-            <td><button>删除</button></td>
+            <td><button @click="deleteHandler(index)">删除</button></td>
         </tr>
         </tbody>
     </table>
-    <h3>总价：{{finalPrice}}</h3>
+        <h3>总价：{{finalPrice|showPrice()}}</h3>
+    </div>
+    <div v-else>
+        <h2 >没有书籍上架</h2>
+    </div>
 </div>
 <script src="../static/js/vue.js"></script>
 <script src="main.js"></script>

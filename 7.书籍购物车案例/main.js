@@ -47,6 +47,9 @@ const app=new Vue({
         },
         incrementBtn(index){
             this.books[index].count ++
+        },
+        deleteHandler(index){
+            this.books.splice(index,1)
         }
     },
     //过滤
