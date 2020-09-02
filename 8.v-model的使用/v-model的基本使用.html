@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <div>
+        <!--input  一般情况下跟 label结合使用-->
+        <label for="message">
+            <input id="message"  v-model="message">
+        </label>
+        <h2>{{message}}</h2>
+    </div>
+</div>
+<script src="../static/js/vue.js"></script>
+<script>
+    const app =new Vue({
+        el:"#app",
+        data:{
+            message:"你好哇！",
+        },
+        methods:{
+
+        },
+        computed:{
+
+        }
+
+    })
+</script>
+
+</body>
+</html>

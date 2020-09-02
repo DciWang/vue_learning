@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+
+    <!--单选-->
+    <div>
+        <h2>{{message}}</h2>
+        <label for="agree">
+            <input type="checkbox" id="agree" v-model="isAgree"> 同意
+        </label>
+        <button :disabled="!isAgree">下一步</button>
+        <h2>您的决定是：{{isAgree}}</h2>
+    </div>
+    <!--多选-->
+    <div>
+        <!--值绑定-->
+        <label  v-for=" item in hobiess" :for="item">
+            <input type="checkbox" :value="item" :id="item" v-model="MyHobiess">{{item}}
+        </label>
+        <h2>您的爱好有：{{MyHobiess}}</h2>
+    </div>
+</div>
+<script src="../static/js/vue.js"></script>
+<script>
+    const app =new Vue({
+        el:"#app",
+        data:{
+            message:"你好哇！",
+            isAgree:false,
+            hobiess:['篮球','足球','乒乓球','网球','羽毛球'],
+            MyHobiess:[]
+        },
+        methods:{
+
+        },
+        computed:{
+
+        }
+
+    })
+</script>
+
+</body>
+</html>

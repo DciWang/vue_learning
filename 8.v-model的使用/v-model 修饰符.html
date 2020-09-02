@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <div>
+        <h2>{{message}}</h2>
+        <!--失去焦点或者enter的时候数据绑定-->
+        <label for="abc">
+            <input type="text" id="abc" v-model.lazy="message">
+        </label>
+    </div>
+</div>
+<script src="../static/js/vue.js"></script>
+<script>
+    const app =new Vue({
+        el:"#app",
+        data:{
+            message:"你好哇！",
+        },
+        methods:{
+
+        },
+        computed:{
+
+        }
+    })
+</script>
+</body>
+</html>

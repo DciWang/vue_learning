@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <div>
+        <h2>{{message}}</h2>
+        <!--支持单选-->
+        <select name="abc" id="abc" v-model="hobiess">
+            <option v-for=" item in sport" :value="item" :id="item">{{item}}</option>
+        </select>
+        <h2>{{hobiess}}</h2>
+        <!--支持多选-->
+        <select name="abc" id="deg" v-model="myhobiess" multiple>
+            <option v-for=" item in sport" :value="item" :id="item">{{item}}</option>
+        </select>
+        <h2>{{myhobiess}}</h2>
+    </div>
+</div>
+<script src="../static/js/vue.js"></script>
+<script>
+    const app = new Vue({
+        el: "#app",
+        data: {
+            message: "你好哇！",
+            sport: ['篮球', '足球', '乒乓球', '网球', '羽毛球'],
+            hobiess: '篮球',
+            myhobiess:[],
+    },
+    methods:{
+
+    }
+    ,
+    computed:{
+
+    }
+
+    })
+</script>
+
+</body>
+</html>
