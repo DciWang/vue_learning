@@ -6,4 +6,5 @@ console.log(filterList)
 let mappedList=numbers.map( item => (item+10)/2);
 console.log(mappedList)
 /*reduce 对数组中元素进行汇总*/
-
+let sum =numbers.reduce((pre,n) => pre+n )
+console.log(sum);

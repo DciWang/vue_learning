@@ -55,15 +55,17 @@ const app=new Vue({
     //过滤
     filters:{
         showPrice(price){
-            return '¥'+price.toFixed(2)
+            // return '¥'+price.toFixed(2)
         }
     },
     computed:{
        finalPrice(){
            let finalPrice=0;
-           for (let argument of this.books) {
-               finalPrice+=argument.price*argument.count
-           }
+           // for (let argument of this.books) {
+           //     finalPrice+=argument.price*argument.count
+           // }
+            finalPrice =this.books.reduce((pre,book) => pre+book.price*book.count);
+           console.log(finalPrice)
            return finalPrice;
        },
 
