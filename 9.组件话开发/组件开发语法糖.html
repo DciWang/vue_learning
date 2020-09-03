@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <div>
+        <h2>{{message}}</h2>
+        <cpn-4></cpn-4>
+        ````````````````````````````````````````````````````
+        <cpn3></cpn3>
+
+    </div>
+</div>
+<script src="../static/js/vue.js"></script>
+<script>
+    Vue.component('cpn3', {
+        template:
+            `
+      <div>
+      <h2>全局组件语法糖</h2>
+      </div>
+      `
+    })
+
+    const app = new Vue({
+        el: "#app",
+        data: {
+            message: "你好哇！",
+        },
+        /*局部组件语法糖*/
+        components: {
+            'cpn-4':{
+                template:
+                    `
+      <div>
+      <h2>局部组件语法糖</h2>
+      </div>
+      `
+            }
+        },
+        methods: {},
+        computed: {}
+
+    })
+</script>
+
+</body>
+</html>

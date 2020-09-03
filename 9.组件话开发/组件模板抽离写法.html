@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <div>
+        <h2>{{message}}</h2>
+    </div>
+    <cpn5></cpn5>
+    <cpn6></cpn6>
+</div>
+<script src="../static/js/vue.js"></script>
+<!--script 标签抽离组件-->
+<script type="text/x-template" id="cpn-5">
+<div>
+    <h2>组件抽离组件（script 标签）</h2>
+</div>
+</script>
+<template>
+    <div>
+        <h2>组件抽离组件（template 标签）</h2>
+    </div>
+</template>
+<template id="cpn-6">
+    <div >
+        <h2>组件抽离组件 （template标签）</h2>
+    </div>
+</template>
+<script>
+    Vue.component('cpn5',
+        {
+            template: '#cpn-5'
+        }
+    );
+    Vue.component('cpn6',
+        {
+            template: '#cpn-6'
+        }
+    )
+    const app =new Vue({
+        el:"#app",
+        data:{
+            message:"你好哇！",
+        },
+
+        methods:{
+
+        },
+        computed:{
+
+        }
+
+    })
+</script>
+
+</body>
+</html>

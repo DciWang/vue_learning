@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <div>
+        <h2>{{message}}</h2>
+    </div>
+    <cpn_c></cpn_c>
+    <cpn-c></cpn-c>
+
+</div>
+<script src="../static/js/vue.js"></script>
+<script>
+    const cpnC=Vue.extend({
+        template:`
+        <div>
+        <h2>创建构组件造器</h2>
+        <p>呵呵呵呵呵呵</p>
+        </div>
+        `
+    });
+    /*创建全局组件实例*/
+    Vue.component('cpn-c',cpnC);
+    const app =new Vue({
+        el:"#app",
+        data:{
+            message:"你好哇！",
+        },
+        /*创建局部组件实例*/
+        components:{
+            'cpn_c': cpnC
+        },
+        methods:{
+
+        },
+        computed:{
+
+        }
+
+    })
+</script>
+
+</body>
+</html>

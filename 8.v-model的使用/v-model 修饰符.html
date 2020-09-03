@@ -12,6 +12,16 @@
         <label for="abc">
             <input type="text" id="abc" v-model.lazy="message">
         </label>
+        <!--只绑定输入数字-->
+        <label for="number">
+            <input type="number" v-model.number="number" id="number">
+            <p2>{{number}}</p2>
+        </label>
+        <!--去除两端得空格-->
+        <label for="trim">
+            <input type="text" v-model.trim="message" id="trim">
+            <p2>{{message}}</p2>
+        </label>
     </div>
 </div>
 <script src="../static/js/vue.js"></script>
@@ -20,6 +30,7 @@
         el:"#app",
         data:{
             message:"你好哇！",
+            number:'',
         },
         methods:{
 

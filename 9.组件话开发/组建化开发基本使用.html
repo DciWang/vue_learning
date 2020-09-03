@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--
+    步骤：1.创建组建构造器
+         2.注册组建
+         3.使用组建
+    -->
+</head>
+<body>
+<div id="app">
+    <div>
+        <h2>{{message}}</h2>
+        <!--使用组件-->
+        <vpn-c></vpn-c>
+    </div>
+</div>
+<script src="../static/js/vue.js"></script>
+<script>
+    /* 创建组建构造器 */
+    const  vpnC=Vue.extend({
+        template: `
+        <div>
+        <h2>创建组建构造器</h2>
+        <p>哈哈哈</p>
+        </div>
+        `
+    });
+    /*创建组件实例*/
+    Vue.component('vpn-c',vpnC);
+    const app =new Vue({
+        el:"#app",
+        data:{
+            message:"你好哇！",
+        },
+        methods:{
+
+        },
+        computed:{
+
+        }
+
+    })
+</script>
+
+</body>
+</html>
