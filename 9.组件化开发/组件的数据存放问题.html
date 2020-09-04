@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <div>
+        <h2>{{message}}</h2>
+        <cpn></cpn>
+    </div>
+</div>
+<script src="../static/js/vue.js"></script>
+<template id="cpn">
+    <div>
+        <button @click="increment()">+</button>
+        <h2>{{count}}</h2>
+        <button  @click="decrement()">-</button>
+    </div>
+</template>
+<script>
+    const cpn={
+        template: `#cpn`,
+        /*模板里的数据必须放在data()函数里面，这样在多次调用这个模板的时候会生成多个实例，里面的操作不会同步，如果放在对象里的话数据会同步，所以不能放在对象里*/
+        data(){
+            return{
+                count: 0,
+            }
+        },
+        //里面用羊可以定义方法等属性
+        methods: {
+            increment(){
+                this.count++
+            },
+            decrement(){
+                this.count--
+            }
+        }
+    };
+    const app =new Vue({
+        el:"#app",
+        data:{
+            message:"你好哇！",
+        },
+        components:{
+            cpn
+        },
+        methods:{
+
+        },
+        computed:{
+
+        }
+
+    })
+</script>
+
+</body>
+</html>

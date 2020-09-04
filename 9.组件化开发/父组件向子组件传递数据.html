@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <div>
+        <h2>{{message}}</h2>
+        <!--在标签里接收父组件传来的数据-->
+        <!--用-来代替驼峰写法-->
+        <cpn :c-message="message" :c-books="books" ></cpn>
+    </div>
+</div>
+<script src="../static/js/vue.js"></script>
+<template id="cpn" >
+  <div>
+      <h3>{{cMessage}}</h3>
+      <ul v-for="item in cBooks"> {{ item}}</ul>
+  </div>
+</template>
+<script>
+    Vue.component('cpn',{
+        template:`#cpn`,
+        data(){
+            return {
+            }
+        },
+        //父传子，用props接收
+        props:{
+            //提供类型、默认值、以及是否必须传值
+            cMessage:{
+                type:String,
+                default:'hello',
+                required:false
+            },
+            cBooks:{
+                type: Array,
+                //类型是对象或者数组的时候，默认值必须是一个函数
+                default(){
+                    return ['高尔夫','羽毛球']
+                },
+                required: true
+            }
+        }
+    })
+    const app =new Vue({
+        el:"#app",
+        data:{
+            message:"你好哇！",
+            books:['basketball','basball','footbal']
+        },
+        methods:{
+
+        },
+        computed:{
+
+        }
+
+    })
+</script>
+
+</body>
+</html>
