@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div id="app">
+    <div>
+        {{message}}
+    </div>
+    <div>
+        <!--父组件向子组件传数据-->
+        <cpn :c-book-list="bookList"  @cclickhandler="fclick"></cpn>
+
+    </div>
+</div>
+<script src="../static/js/vue.js"></script>
+<!--定义组件模版-->
+<templat id="cpn">
+    <div>
+        <ul v-for="item in cBookList" :key="item.id">
+            <button @click="btnClick(item)">{{item.name}}</button>
+        </ul>
+    </div>
+</templat>
+<script>
+    const cpn = {
+        template: `#cpn`,
+        data() {
+            return {
+                sport:[`篮球`,`足球`,`网球`,`高尔夫`]
+            }
+        },
+        props: {
+            cBookList: {
+                type: Array,
+                default: ['java', `python`, `golang`, `c`, `h5`],
+                required: false
+            }
+        },
+        methods: {
+            /*子组件接受父组件穿过来的数据*/
+            btnClick(item) {
+                /*子组件自定义事件向父组件传数据*/
+                this.$emit(`cclickhandler`,item)
+                console.log(`父组件传过来的数据`)
+                console.log(item)
+            }
+
+        }
+    }
+
+    const app = new Vue({
+        el: "#app",
+        data: {
+            message: "你好哇",
+            bookList: [
+                {
+                    id: 1,
+                    name: `ssm`,
+                    price: 99,
+                    number: 20,
+                    author: 'james'
+                }, {
+                    id: 2,
+                    name: `springboot`,
+                    price: 89,
+                    number: 10,
+                    author: 'kvayi'
+                }, {
+                    id: 3,
+                    name: `springcloud`,
+                    price: 79,
+                    number: 30,
+                    author: 'kobe'
+                }, {
+                    id: 4,
+                    name: `mybatis`,
+                    price: 59,
+                    number: 40,
+                    author: 'loser'
+                }, {
+                    id: 5,
+                    name: `docker`,
+                    price: 199,
+                    number: 120,
+                    author: 'jordan'
+                },
+            ]
+        },
+        components: {
+            cpn
+        },
+        methods: {
+            /*父组件接受子组件接受到的数据*/
+            fclick(item){
+                console.log("子组件传过来的")
+                console.log(item)
+
+            }
+        }
+    })
+</script>
+
+</body>
+</html>

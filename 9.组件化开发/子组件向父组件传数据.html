@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <div>
+    {{message}}
+        <!--自定义事件向父组件传参数-->
+        <cpn @cpnclick="click"></cpn>
+    </div>
+</div>
+<script src="../static/js/vue.js"></script>
+<template id="cpn">
+    <div>
+        <ul v-for=" item in  dataList">
+            <button @click="cpnClick(item)">{{item.name}}</button>
+        </ul>
+    </div>
+</template>
+<script>
+    const cpn={
+        template:`#cpn`,
+        data(){
+            return{
+                dataList:[
+                    {id: 1,name: "手机"},
+                    {id: 1,name: "电脑"},
+                    {id: 1,name: "相机"},
+                    {id: 1,name: "平板"},
+                    {id: 1,name: "手环"},
+                ]
+            }
+        },
+        methods: {
+            cpnClick(item){
+                /*定义自定事件，并且传参数*/
+                this.$emit("cpnclick",item)
+            }
+
+        }
+    }
+
+    const app=new Vue({
+        el:"#app",
+        data:{
+            message:"你好哇",
+        },
+        components: {
+          cpn
+        },
+        methods:{
+            /*父组件定义事件接受数据*/
+            click(item) {
+                console.log(item)
+            }
+
+        }
+    })
+</script>
+
+</body>
+</html>
