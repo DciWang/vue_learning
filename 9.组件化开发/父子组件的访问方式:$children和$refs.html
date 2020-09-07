@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--父组件访问子组件：使用$children或$refs-->
+</head>
+<body>
+<div id="app">
+    <div>
+        <cpn></cpn>
+        <button @click="btnClick1()">$children访问子组件1</button>
+        <!--ref属性定义唯一标示-->
+        <cpn ref="aaa"></cpn>
+        <button @click="btnClick2()">$refs访问子组件2</button>
+    </div>
+</div>
+<script src="../static/js/vue.js"></script>
+<template id="cpn">
+    <div>
+        我是子组件
+    </div>
+</template>
+
+<script>
+    const app = new Vue({
+        el: "#app",
+        data: {
+            message: "你好哇",
+        },
+        methods: {
+            btnClick1() {
+                /*根据子组件的下表识别的，所以基本不使用，出了获取所有的组件*/
+                console.log(this.$children[0].cMessage);
+            },
+            btnClick2() {
+                /*根据子组件的下表识别的，所以基本不使用，出了获取所有的组件*/
+                console.log(this.$refs.aaa.cMessage);
+            }
+        },
+        components: {
+            cpn: {
+                template: `#cpn`,
+                data() {
+                    return {
+                        cMessage: `沉默的大多数`
+                    }
+                },
+            },
+        },
+    })
+</script>
+
+</body>
+</html>

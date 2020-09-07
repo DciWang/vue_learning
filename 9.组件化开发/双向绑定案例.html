@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <div>
+        <h2>
+            <cpn :c-message1="message1"
+                 :c-message2="message2"
+                 @cclickdata="clickData"></cpn>
+        </h2>
+        <h1>{{data}}</h1>
+    </div>
+</div>
+<script src="../static/js/vue.js"></script>
+<template id="cpn">
+    <div>
+        {{cMessage1Data}}
+        <input type="text" v-model="cMessage1Data">
+        <hr>
+        {{cMessage2Data}}
+        <input type="text" v-model="cMessage2Data">
+        <hr>
+        <button @click="btnClick(cMessage1Data+cMessage2Data)">点一下</button>
+    </div>
+</template>
+<script>
+    const cpn ={
+        template:`#cpn`,
+        props:{
+            cMessage1:{
+                type:String,
+                default:'',
+                required:false
+            } ,
+            cMessage2:{
+                type:String,
+                default:'',
+                required:false
+            }
+        },
+        //在data（）里定义数据，接受props的数据，用于双向绑定
+        data(){
+            return{
+                    cMessage1Data:this.cMessage1,
+                    cMessage2Data:this.cMessage2
+            }
+        },
+        methods: {
+            btnClick(event){
+                this.$emit(`cclickdata`,event)
+            }
+        }
+    }
+    const app=new Vue({
+        el:"#app",
+        data:{
+            message1:"你好哇",
+            message2:"李乔",
+            data:'touch my hart'
+        },
+        methods:{
+            clickData(event){
+                console.log("点击到了吗");
+                this.data=event;
+            }
+        },
+        components:{
+            cpn
+        }
+    })
+</script>
+
+</body>
+</html>
