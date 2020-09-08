@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--父组件替换插槽的标签，但是内容有父组件来提供-->
+</head>
+<body>
+<div id="app">
+    <div>
+        {{message}}
+        <cpn></cpn>
+        <cpn>
+            <!--将数据传入slot-scope="slot"中-->
+            <div slot-scope="slot">
+                <!--将数据取出展示出来-->
+            <span v-for="item in slot.data">{{item.name}},</span>
+            </div>
+        </cpn>
+    </div>
+</div>
+<script src="../static/js/vue.js"></script>
+<template id="cpn">
+    <div>
+        <!--拿数据给标签接受-->
+        <slot  :data="bookList">
+            <ul>
+                <li  v-for="item in bookList">
+                    {{item.name}}
+                </li>
+            </ul>
+        </slot>
+    </div>
+</template>
+<script>
+    const app = new Vue({
+        el: "#app",
+        data: {
+            message: "你好哇",
+        },
+        components: {
+            cpn: {
+                template: `#cpn`,
+                data() {
+                    return {
+                        bookList: [
+                            {
+                                id: 1,
+                                name: `ssm`,
+                                price: 99,
+                                number: 20,
+                                author: 'james'
+                            }, {
+                                id: 2,
+                                name: `springboot`,
+                                price: 89,
+                                number: 10,
+                                author: 'kvayi'
+                            }, {
+                                id: 3,
+                                name: `springcloud`,
+                                price: 79,
+                                number: 30,
+                                author: 'kobe'
+                            }, {
+                                id: 4,
+                                name: `mybatis`,
+                                price: 59,
+                                number: 40,
+                                author: 'loser'
+                            }, {
+                                id: 5,
+                                name: `docker`,
+                                price: 199,
+                                number: 120,
+                                author: 'jordan'
+                            },
+                        ]
+
+                    }
+                }
+            }
+
+        },
+        methods: {}
+    })
+</script>
+
+</body>
+</html>
