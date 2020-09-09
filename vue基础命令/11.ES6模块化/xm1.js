@@ -14,7 +14,7 @@ if (flag) {
 export {
     flag, sum
 }
-/*导出一个对象*/
+/*导出一个类*/
 export class Peron {
     run() {
         console.log("在奔跑");
