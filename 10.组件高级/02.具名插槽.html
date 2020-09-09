@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <div>
+        <h2>{{message}}</h2>
+        <!--如果不替换插槽里的数据，则默认为原数据-->
+        <cpn ><button  slot="center">替换具体插槽的内容</button></cpn>
+    </div>
+</div>
+<script src="../static/js/vue.js"></script>
+<template id="cpn">
+    <div>
+        <!--用name属性给slot一个唯一标识-->
+        <slot name="befor">befor</slot>
+        <slot name="center">center</slot>
+        <slot name="after">after</slot>
+    </div>
+</template>
+<script>
+    const app =new Vue({
+        el:"#app",
+        data:{
+            message:"你好哇！",
+        },
+        methods:{
+
+        },
+        components: {
+          cpn:{
+              template:`#cpn`
+          }
+        },
+
+        computed:{
+
+        },
+
+    })
+</script>
+
+</body>
+</html>
