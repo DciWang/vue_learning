@@ -7,6 +7,9 @@ const person=import('./js/bbb')
 console.log(person);
 /*css导入*/
 require ('./css/nomal.css')
+require('./css/special.less')
+
+document.writeln("你好哇，银河")
 
 //webpack打包
 // webpack   ./src/main.js ./dist/bundle.js

@@ -142,67 +142,11 @@
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/*CommonJs导入*/
-const {add,mul}= __webpack_require__(1)
-console.log(add(10, 20));
-console.log(mul(20, 20));
-/*es6 导入*/
-const person=__webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 6))
-console.log(person);
-/*css导入*/
-__webpack_require__ (2)
-
-//webpack打包
-// webpack   ./src/main.js ./dist/bundle.js
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-function add(number1,number2) {
-    return number1+number2
-};
-function mul(number1,number2) {
-    return number1*number2
-}
-
-/*CommonJS导出*/
-module.exports={ add,mul}
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var api = __webpack_require__(3);
-            var content = __webpack_require__(4);
-
-            content = content.__esModule ? content.default : content;
-
-            if (typeof content === 'string') {
-              content = [[module.i, content, '']];
-            }
-
-var options = {};
-
-options.insert = "head";
-options.singleton = false;
-
-var update = api(content, options);
-
-
-
-module.exports = content.locals || {};
-
-/***/ }),
-/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -477,17 +421,7 @@ module.exports = function (list, options) {
 };
 
 /***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(5)(false);
-// Module
-exports.push([module.i, "body{\n    background: darkgreen;\n}", ""]);
-
-
-
-/***/ }),
-/* 5 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -576,6 +510,109 @@ function toComment(sourceMap) {
   var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
   return '/*# ' + data + ' */';
 }
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*CommonJs导入*/
+const {add,mul}= __webpack_require__(3)
+console.log(add(10, 20));
+console.log(mul(20, 20));
+/*es6 导入*/
+const person=__webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 8))
+console.log(person);
+/*css导入*/
+__webpack_require__ (4)
+__webpack_require__(6)
+
+document.writeln("你好哇，银河")
+
+//webpack打包
+// webpack   ./src/main.js ./dist/bundle.js
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+function add(number1,number2) {
+    return number1+number2
+};
+function mul(number1,number2) {
+    return number1*number2
+}
+
+/*CommonJS导出*/
+module.exports={ add,mul}
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var api = __webpack_require__(0);
+            var content = __webpack_require__(5);
+
+            content = content.__esModule ? content.default : content;
+
+            if (typeof content === 'string') {
+              content = [[module.i, content, '']];
+            }
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = api(content, options);
+
+
+
+module.exports = content.locals || {};
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)(false);
+// Module
+exports.push([module.i, "body{\n    background: darkgreen;\n}", ""]);
+
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var api = __webpack_require__(0);
+            var content = __webpack_require__(7);
+
+            content = content.__esModule ? content.default : content;
+
+            if (typeof content === 'string') {
+              content = [[module.i, content, '']];
+            }
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = api(content, options);
+
+
+
+module.exports = content.locals || {};
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)(false);
+// Module
+exports.push([module.i, "body {\n  font-size: 50px;\n  color: orange;\n}\n", ""]);
+
+
 
 /***/ })
 /******/ ]);

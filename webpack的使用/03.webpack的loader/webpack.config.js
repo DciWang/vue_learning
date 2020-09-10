@@ -14,15 +14,31 @@ module.exports={
             {
                 test: /\.css$/,
                 use: [
-                    // style-loader
+                    // style-loader，负责将样式添加到dom中
                     { loader: 'style-loader' },
-                    // css-loader
+                    // css-loader, 只负责对css文件进行加载
                     {
                         loader: 'css-loader',
                         options: {
                             modules: true
                         }
                     },
+                ]
+            },
+            {
+                test: /\.less$/,
+                use: [
+                    // style-loader，负责将样式添加到dom中
+                    { loader: 'style-loader' },
+                    // css-loader, 只负责对css文件进行加载
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            modules: true
+                        }
+                    },
+                    // style-loader
+                    { loader: 'less-loader' },
                 ]
             }
         ]
