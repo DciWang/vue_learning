@@ -1,0 +1,26 @@
+{
+  "name": "webpackconfig",
+  "version": "1.0.0",
+  "description": "Package management file  包管理文件（通过  npm  init 生成，里面包含一些信息和包依赖，依赖通过 npm  install 下载）",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "css-loader": "^2.0.2",
+    "less-loader": "^5.0.0",
+    "style-loader": "^1.2.1",
+    "vue-loader": "^15.9.3",
+    "vue-template-compiler": "^2.6.12",
+    "webpack": "^3.6.0"
+  },
+  "dependencies": {
+    "less": "^3.9"
+  }
+}
