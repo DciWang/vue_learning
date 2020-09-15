@@ -78,7 +78,7 @@
 /******/ 		// start chunk loading
 /******/ 		var head = document.getElementsByTagName('head')[0];
 /******/ 		var script = document.createElement('script');
-/******/ 		script.type = 'text/javascript';
+/******/ 		script.type = "text/javascript";
 /******/ 		script.charset = 'utf-8';
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
@@ -142,7 +142,7 @@
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -174,372 +174,6 @@ module.exports = g;
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var isOldIE = function isOldIE() {
-  var memo;
-  return function memorize() {
-    if (typeof memo === 'undefined') {
-      // Test for IE <= 9 as proposed by Browserhacks
-      // @see http://browserhacks.com/#hack-e71d8692f65334173fee715c222cb805
-      // Tests for existence of standard globals is to allow style-loader
-      // to operate correctly into non-standard environments
-      // @see https://github.com/webpack-contrib/style-loader/issues/177
-      memo = Boolean(window && document && document.all && !window.atob);
-    }
-
-    return memo;
-  };
-}();
-
-var getTarget = function getTarget() {
-  var memo = {};
-  return function memorize(target) {
-    if (typeof memo[target] === 'undefined') {
-      var styleTarget = document.querySelector(target); // Special case to return head of iframe instead of iframe itself
-
-      if (window.HTMLIFrameElement && styleTarget instanceof window.HTMLIFrameElement) {
-        try {
-          // This will throw an exception if access to iframe is blocked
-          // due to cross-origin restrictions
-          styleTarget = styleTarget.contentDocument.head;
-        } catch (e) {
-          // istanbul ignore next
-          styleTarget = null;
-        }
-      }
-
-      memo[target] = styleTarget;
-    }
-
-    return memo[target];
-  };
-}();
-
-var stylesInDom = [];
-
-function getIndexByIdentifier(identifier) {
-  var result = -1;
-
-  for (var i = 0; i < stylesInDom.length; i++) {
-    if (stylesInDom[i].identifier === identifier) {
-      result = i;
-      break;
-    }
-  }
-
-  return result;
-}
-
-function modulesToDom(list, options) {
-  var idCountMap = {};
-  var identifiers = [];
-
-  for (var i = 0; i < list.length; i++) {
-    var item = list[i];
-    var id = options.base ? item[0] + options.base : item[0];
-    var count = idCountMap[id] || 0;
-    var identifier = "".concat(id, " ").concat(count);
-    idCountMap[id] = count + 1;
-    var index = getIndexByIdentifier(identifier);
-    var obj = {
-      css: item[1],
-      media: item[2],
-      sourceMap: item[3]
-    };
-
-    if (index !== -1) {
-      stylesInDom[index].references++;
-      stylesInDom[index].updater(obj);
-    } else {
-      stylesInDom.push({
-        identifier: identifier,
-        updater: addStyle(obj, options),
-        references: 1
-      });
-    }
-
-    identifiers.push(identifier);
-  }
-
-  return identifiers;
-}
-
-function insertStyleElement(options) {
-  var style = document.createElement('style');
-  var attributes = options.attributes || {};
-
-  if (typeof attributes.nonce === 'undefined') {
-    var nonce =  true ? __webpack_require__.nc : null;
-
-    if (nonce) {
-      attributes.nonce = nonce;
-    }
-  }
-
-  Object.keys(attributes).forEach(function (key) {
-    style.setAttribute(key, attributes[key]);
-  });
-
-  if (typeof options.insert === 'function') {
-    options.insert(style);
-  } else {
-    var target = getTarget(options.insert || 'head');
-
-    if (!target) {
-      throw new Error("Couldn't find a style target. This probably means that the value for the 'insert' parameter is invalid.");
-    }
-
-    target.appendChild(style);
-  }
-
-  return style;
-}
-
-function removeStyleElement(style) {
-  // istanbul ignore if
-  if (style.parentNode === null) {
-    return false;
-  }
-
-  style.parentNode.removeChild(style);
-}
-/* istanbul ignore next  */
-
-
-var replaceText = function replaceText() {
-  var textStore = [];
-  return function replace(index, replacement) {
-    textStore[index] = replacement;
-    return textStore.filter(Boolean).join('\n');
-  };
-}();
-
-function applyToSingletonTag(style, index, remove, obj) {
-  var css = remove ? '' : obj.media ? "@media ".concat(obj.media, " {").concat(obj.css, "}") : obj.css; // For old IE
-
-  /* istanbul ignore if  */
-
-  if (style.styleSheet) {
-    style.styleSheet.cssText = replaceText(index, css);
-  } else {
-    var cssNode = document.createTextNode(css);
-    var childNodes = style.childNodes;
-
-    if (childNodes[index]) {
-      style.removeChild(childNodes[index]);
-    }
-
-    if (childNodes.length) {
-      style.insertBefore(cssNode, childNodes[index]);
-    } else {
-      style.appendChild(cssNode);
-    }
-  }
-}
-
-function applyToTag(style, options, obj) {
-  var css = obj.css;
-  var media = obj.media;
-  var sourceMap = obj.sourceMap;
-
-  if (media) {
-    style.setAttribute('media', media);
-  } else {
-    style.removeAttribute('media');
-  }
-
-  if (sourceMap && btoa) {
-    css += "\n/*# sourceMappingURL=data:application/json;base64,".concat(btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))), " */");
-  } // For old IE
-
-  /* istanbul ignore if  */
-
-
-  if (style.styleSheet) {
-    style.styleSheet.cssText = css;
-  } else {
-    while (style.firstChild) {
-      style.removeChild(style.firstChild);
-    }
-
-    style.appendChild(document.createTextNode(css));
-  }
-}
-
-var singleton = null;
-var singletonCounter = 0;
-
-function addStyle(obj, options) {
-  var style;
-  var update;
-  var remove;
-
-  if (options.singleton) {
-    var styleIndex = singletonCounter++;
-    style = singleton || (singleton = insertStyleElement(options));
-    update = applyToSingletonTag.bind(null, style, styleIndex, false);
-    remove = applyToSingletonTag.bind(null, style, styleIndex, true);
-  } else {
-    style = insertStyleElement(options);
-    update = applyToTag.bind(null, style, options);
-
-    remove = function remove() {
-      removeStyleElement(style);
-    };
-  }
-
-  update(obj);
-  return function updateStyle(newObj) {
-    if (newObj) {
-      if (newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap) {
-        return;
-      }
-
-      update(obj = newObj);
-    } else {
-      remove();
-    }
-  };
-}
-
-module.exports = function (list, options) {
-  options = options || {}; // Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
-  // tags it will allow on a page
-
-  if (!options.singleton && typeof options.singleton !== 'boolean') {
-    options.singleton = isOldIE();
-  }
-
-  list = list || [];
-  var lastIdentifiers = modulesToDom(list, options);
-  return function update(newList) {
-    newList = newList || [];
-
-    if (Object.prototype.toString.call(newList) !== '[object Array]') {
-      return;
-    }
-
-    for (var i = 0; i < lastIdentifiers.length; i++) {
-      var identifier = lastIdentifiers[i];
-      var index = getIndexByIdentifier(identifier);
-      stylesInDom[index].references--;
-    }
-
-    var newLastIdentifiers = modulesToDom(newList, options);
-
-    for (var _i = 0; _i < lastIdentifiers.length; _i++) {
-      var _identifier = lastIdentifiers[_i];
-
-      var _index = getIndexByIdentifier(_identifier);
-
-      if (stylesInDom[_index].references === 0) {
-        stylesInDom[_index].updater();
-
-        stylesInDom.splice(_index, 1);
-      }
-    }
-
-    lastIdentifiers = newLastIdentifiers;
-  };
-};
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/*
-  MIT License http://www.opensource.org/licenses/mit-license.php
-  Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function (useSourceMap) {
-  var list = []; // return the list of modules as css string
-
-  list.toString = function toString() {
-    return this.map(function (item) {
-      var content = cssWithMappingToString(item, useSourceMap);
-
-      if (item[2]) {
-        return '@media ' + item[2] + '{' + content + '}';
-      } else {
-        return content;
-      }
-    }).join('');
-  }; // import a list of modules into the list
-
-
-  list.i = function (modules, mediaQuery) {
-    if (typeof modules === 'string') {
-      modules = [[null, modules, '']];
-    }
-
-    var alreadyImportedModules = {};
-
-    for (var i = 0; i < this.length; i++) {
-      var id = this[i][0];
-
-      if (id != null) {
-        alreadyImportedModules[id] = true;
-      }
-    }
-
-    for (i = 0; i < modules.length; i++) {
-      var item = modules[i]; // skip already imported module
-      // this implementation is not 100% perfect for weird media query combinations
-      // when a module is imported multiple times with different media queries.
-      // I hope this will never occur (Hey this way we have smaller bundles)
-
-      if (item[0] == null || !alreadyImportedModules[item[0]]) {
-        if (mediaQuery && !item[2]) {
-          item[2] = mediaQuery;
-        } else if (mediaQuery) {
-          item[2] = '(' + item[2] + ') and (' + mediaQuery + ')';
-        }
-
-        list.push(item);
-      }
-    }
-  };
-
-  return list;
-};
-
-function cssWithMappingToString(item, useSourceMap) {
-  var content = item[1] || '';
-  var cssMapping = item[3];
-
-  if (!cssMapping) {
-    return content;
-  }
-
-  if (useSourceMap && typeof btoa === 'function') {
-    var sourceMapping = toComment(cssMapping);
-    var sourceURLs = cssMapping.sources.map(function (source) {
-      return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */';
-    });
-    return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
-  }
-
-  return [content].join('\n');
-} // Adapted from convert-source-map (MIT)
-
-
-function toComment(sourceMap) {
-  // eslint-disable-next-line no-undef
-  var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
-  var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
-  return '/*# ' + data + ' */';
-}
-
-/***/ }),
-/* 3 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -729,205 +363,48 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 4 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_script_lang_js___ = __webpack_require__(5);
-/* unused harmony namespace reexport */
- /* harmony default export */ __webpack_exports__["a"] = (__WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_script_lang_js___["a" /* default */]); 
-
-/***/ }),
-/* 5 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Cpn_vue__ = __webpack_require__(21);
-//
-//
-//
-//
-//
-
-
-/* harmony default export */ __webpack_exports__["a"] = ({
-    name: "App",
-    data(){
-      return{
-        msg:"Hello Vue.js"
-      }
-    },
-    components:{
-        cpn: __WEBPACK_IMPORTED_MODULE_0__Cpn_vue__["a" /* default */]
-    }
-});
-
-
-/***/ }),
-/* 6 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_index_js_vue_loader_options_Cpn_vue_vue_type_script_lang_js___ = __webpack_require__(7);
-/* unused harmony namespace reexport */
- /* harmony default export */ __webpack_exports__["a"] = (__WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_index_js_vue_loader_options_Cpn_vue_vue_type_script_lang_js___["a" /* default */]); 
-
-/***/ }),
-/* 7 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["a"] = ({
-    name: "Cpn",
-    data() {
-        return {
-            msg: "我是cpn组件"
-        }
-    },
-    components: {}
-});
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = normalizeComponent;
-/* globals __VUE_SSR_CONTEXT__ */
-
-// IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
-// This module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle.
-
-function normalizeComponent (
-  scriptExports,
-  render,
-  staticRenderFns,
-  functionalTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier, /* server only */
-  shadowMode /* vue-cli only */
-) {
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // render functions
-  if (render) {
-    options.render = render
-    options.staticRenderFns = staticRenderFns
-    options._compiled = true
-  }
-
-  // functional template
-  if (functionalTemplate) {
-    options.functional = true
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = 'data-v-' + scopeId
-  }
-
-  var hook
-  if (moduleIdentifier) { // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
-    }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = shadowMode
-      ? function () {
-        injectStyles.call(
-          this,
-          (options.functional ? this.parent : this).$root.$options.shadowRoot
-        )
-      }
-      : injectStyles
-  }
-
-  if (hook) {
-    if (options.functional) {
-      // for template-only hot-reload because in that case the render fn doesn't
-      // go through the normalizer
-      options._injectStyles = hook
-      // register for functional component in vue file
-      var originalRender = options.render
-      options.render = function renderWithStyleInjection (h, context) {
-        hook.call(context)
-        return originalRender(h, context)
-      }
-    } else {
-      // inject component registration as beforeCreate hook
-      var existing = options.beforeCreate
-      options.beforeCreate = existing
-        ? [].concat(existing, hook)
-        : [hook]
-    }
-  }
-
-  return {
-    exports: scriptExports,
-    options: options
-  }
-}
-
-
-/***/ }),
-/* 9 */
+/* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__vue_App_vue__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__vue_App_vue__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__vue_App_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__vue_App_vue__);
 /*CommonJs导入*/
-const {add, mul} = __webpack_require__(10)
+const {add, mul} = __webpack_require__(3)
 console.log(add(10, 20));
 console.log(mul(20, 20));
 /*es6 导入*/
-const person = __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 24))
+const person = __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 10))
 console.log(person);
 /*css导入*/
-__webpack_require__(11)
-__webpack_require__(13)
+__webpack_require__(4)
+__webpack_require__(5)
 /*vue导入*/
 
 
-new __WEBPACK_IMPORTED_MODULE_0_vue__["a" /* default */]({
+/*new Vue({
     el:'#app',
     template:`<App/>`,
     components:{
-        App: __WEBPACK_IMPORTED_MODULE_1__vue_App_vue__["a" /* default */]
+        App
     }
-})
-
+})*/
+// new Vue({
+//     el:'#app',
+//     template:`
+//     <div>
+//         {{message}}
+//     </div>
+//     `,
+//     data:{
+//         message:"helllo vue"
+//     },
+//     // components:{
+//     //     App
+//     // }
+// })
 document.writeln("你好哇，银河")
 
 //webpack打包
@@ -935,7 +412,7 @@ document.writeln("你好哇，银河")
 
 
 /***/ }),
-/* 10 */
+/* 3 */
 /***/ (function(module, exports) {
 
 function add(number1,number2) {
@@ -949,75 +426,19 @@ function mul(number1,number2) {
 module.exports={ add,mul}
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 4 */
+/***/ (function(module, exports) {
 
-var api = __webpack_require__(1);
-            var content = __webpack_require__(12);
-
-            content = content.__esModule ? content.default : content;
-
-            if (typeof content === 'string') {
-              content = [[module.i, content, '']];
-            }
-
-var options = {};
-
-options.insert = "head";
-options.singleton = false;
-
-var update = api(content, options);
-
-
-
-module.exports = content.locals || {};
+throw new Error("Module build failed: Error: Cannot find module './options.json'\nRequire stack:\n- /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/style-loader/dist/index.js\n- /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/style-loader/dist/cjs.js\n- /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/loader-runner/lib/loadLoader.js\n- /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/loader-runner/lib/LoaderRunner.js\n- /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/NormalModule.js\n- /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/NormalModuleFactory.js\n- /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/Compiler.js\n- /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/webpack.js\n- /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/vue-loader/lib/plugin.js\n- /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/webpack.config.js\n- /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/bin/convert-argv.js\n- /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/bin/webpack.js\n    at Function.Module._resolveFilename (internal/modules/cjs/loader.js:1080:15)\n    at Function.Module._load (internal/modules/cjs/loader.js:923:27)\n    at Module.require (internal/modules/cjs/loader.js:1140:19)\n    at require (internal/modules/cjs/helpers.js:75:18)\n    at Object.<anonymous> (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/style-loader/dist/index.js:16:39)\n    at Module._compile (internal/modules/cjs/loader.js:1251:30)\n    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1272:10)\n    at Module.load (internal/modules/cjs/loader.js:1100:32)\n    at Function.Module._load (internal/modules/cjs/loader.js:962:14)\n    at Module.require (internal/modules/cjs/loader.js:1140:19)\n    at require (internal/modules/cjs/helpers.js:75:18)\n    at Object.<anonymous> (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/style-loader/dist/cjs.js:3:16)\n    at Module._compile (internal/modules/cjs/loader.js:1251:30)\n    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1272:10)\n    at Module.load (internal/modules/cjs/loader.js:1100:32)\n    at Function.Module._load (internal/modules/cjs/loader.js:962:14)\n    at Module.require (internal/modules/cjs/loader.js:1140:19)\n    at require (internal/modules/cjs/helpers.js:75:18)\n    at loadLoader (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/loader-runner/lib/loadLoader.js:18:17)\n    at iteratePitchingLoaders (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/loader-runner/lib/LoaderRunner.js:169:2)\n    at runLoaders (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/loader-runner/lib/LoaderRunner.js:365:2)\n    at NormalModule.doBuild (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/NormalModule.js:182:3)\n    at NormalModule.build (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/NormalModule.js:275:15)\n    at Compilation.buildModule (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/Compilation.js:157:10)\n    at factoryCallback (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/Compilation.js:348:12)\n    at /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/NormalModuleFactory.js:243:5\n    at /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/NormalModuleFactory.js:94:13\n    at /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/tapable/lib/Tapable.js:268:11\n    at NormalModuleFactory.<anonymous> (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/CompatibilityPlugin.js:52:5)\n    at NormalModuleFactory.applyPluginsAsyncWaterfall (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/tapable/lib/Tapable.js:272:13)");
 
 /***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 5 */
+/***/ (function(module, exports) {
 
-exports = module.exports = __webpack_require__(2)(false);
-// Module
-exports.push([module.i, "body{\n    background: darkgreen;\n}", ""]);
-
-
+throw new Error("Module build failed: Error: Cannot find module './options.json'\nRequire stack:\n- /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/style-loader/dist/index.js\n- /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/style-loader/dist/cjs.js\n- /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/loader-runner/lib/loadLoader.js\n- /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/loader-runner/lib/LoaderRunner.js\n- /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/NormalModule.js\n- /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/NormalModuleFactory.js\n- /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/Compiler.js\n- /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/webpack.js\n- /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/vue-loader/lib/plugin.js\n- /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/webpack.config.js\n- /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/bin/convert-argv.js\n- /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/bin/webpack.js\n    at Function.Module._resolveFilename (internal/modules/cjs/loader.js:1080:15)\n    at Function.Module._load (internal/modules/cjs/loader.js:923:27)\n    at Module.require (internal/modules/cjs/loader.js:1140:19)\n    at require (internal/modules/cjs/helpers.js:75:18)\n    at Object.<anonymous> (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/style-loader/dist/index.js:16:39)\n    at Module._compile (internal/modules/cjs/loader.js:1251:30)\n    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1272:10)\n    at Module.load (internal/modules/cjs/loader.js:1100:32)\n    at Function.Module._load (internal/modules/cjs/loader.js:962:14)\n    at Module.require (internal/modules/cjs/loader.js:1140:19)\n    at require (internal/modules/cjs/helpers.js:75:18)\n    at Object.<anonymous> (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/style-loader/dist/cjs.js:3:16)\n    at Module._compile (internal/modules/cjs/loader.js:1251:30)\n    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1272:10)\n    at Module.load (internal/modules/cjs/loader.js:1100:32)\n    at Function.Module._load (internal/modules/cjs/loader.js:962:14)\n    at Module.require (internal/modules/cjs/loader.js:1140:19)\n    at require (internal/modules/cjs/helpers.js:75:18)\n    at loadLoader (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/loader-runner/lib/loadLoader.js:18:17)\n    at iteratePitchingLoaders (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/loader-runner/lib/LoaderRunner.js:169:2)\n    at runLoaders (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/loader-runner/lib/LoaderRunner.js:365:2)\n    at NormalModule.doBuild (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/NormalModule.js:182:3)\n    at NormalModule.build (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/NormalModule.js:275:15)\n    at Compilation.buildModule (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/Compilation.js:157:10)\n    at factoryCallback (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/Compilation.js:348:12)\n    at /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/NormalModuleFactory.js:243:5\n    at /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/NormalModuleFactory.js:94:13\n    at /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/tapable/lib/Tapable.js:268:11\n    at NormalModuleFactory.<anonymous> (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/CompatibilityPlugin.js:52:5)\n    at NormalModuleFactory.applyPluginsAsyncWaterfall (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/tapable/lib/Tapable.js:272:13)");
 
 /***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var api = __webpack_require__(1);
-            var content = __webpack_require__(14);
-
-            content = content.__esModule ? content.default : content;
-
-            if (typeof content === 'string') {
-              content = [[module.i, content, '']];
-            }
-
-var options = {};
-
-options.insert = "head";
-options.singleton = false;
-
-var update = api(content, options);
-
-
-
-module.exports = content.locals || {};
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(2)(false);
-// Module
-exports.push([module.i, "body {\n  font-size: 50px;\n  color: orange;\n}\n", ""]);
-
-
-
-/***/ }),
-/* 15 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13013,12 +12434,12 @@ function getOuterHTML (el) {
 
 Vue.compile = compileToFunctions;
 
-/* harmony default export */ __webpack_exports__["a"] = (Vue);
+/* unused harmony default export */ var _unused_webpack_default_export = (Vue);
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(3), __webpack_require__(0), __webpack_require__(16).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1), __webpack_require__(0), __webpack_require__(7).setImmediate))
 
 /***/ }),
-/* 16 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var scope = (typeof global !== "undefined" && global) ||
@@ -13074,7 +12495,7 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(17);
+__webpack_require__(8);
 // On some exotic environments, it's not clear which object `setimmediate` was
 // able to install onto.  Search each possibility in the same order as the
 // `setimmediate` library.
@@ -13088,7 +12509,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 17 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -13278,155 +12699,13 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(3)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(1)))
 
 /***/ }),
-/* 18 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/* 9 */
+/***/ (function(module, exports) {
 
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__App_vue_vue_type_template_id_5e019a2f_scoped_true___ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__App_vue_vue_type_script_lang_js___ = __webpack_require__(4);
-/* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__node_modules_vue_loader_lib_runtime_componentNormalizer_js__ = __webpack_require__(8);
-
-
-
-
-
-/* normalize component */
-
-var component = Object(__WEBPACK_IMPORTED_MODULE_2__node_modules_vue_loader_lib_runtime_componentNormalizer_js__["a" /* default */])(
-  __WEBPACK_IMPORTED_MODULE_1__App_vue_vue_type_script_lang_js___["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_0__App_vue_vue_type_template_id_5e019a2f_scoped_true___["a" /* render */],
-  __WEBPACK_IMPORTED_MODULE_0__App_vue_vue_type_template_id_5e019a2f_scoped_true___["b" /* staticRenderFns */],
-  false,
-  null,
-  "5e019a2f",
-  null
-  
-)
-
-/* hot reload */
-if (false) {
-  var api = require("/home/dciwang/WebStormPrjecks/vue_learning/webpack的使用/04.webpack-vue/node_modules/vue-hot-reload-api/dist/index.js")
-  api.install(require('vue'))
-  if (api.compatible) {
-    module.hot.accept()
-    if (!api.isRecorded('5e019a2f')) {
-      api.createRecord('5e019a2f', component.options)
-    } else {
-      api.reload('5e019a2f', component.options)
-    }
-    module.hot.accept("./App.vue?vue&type=template&id=5e019a2f&scoped=true&", function () {
-      api.rerender('5e019a2f', {
-        render: render,
-        staticRenderFns: staticRenderFns
-      })
-    })
-  }
-}
-component.options.__file = "src/vue/App.vue"
-/* harmony default export */ __webpack_exports__["a"] = (component.exports);
-
-/***/ }),
-/* 19 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_template_id_5e019a2f_scoped_true___ = __webpack_require__(20);
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_template_id_5e019a2f_scoped_true___["a"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_template_id_5e019a2f_scoped_true___["b"]; });
-
-
-/***/ }),
-/* 20 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return staticRenderFns; });
-var render = function () {}
-var staticRenderFns = []
-
-
-
-/***/ }),
-/* 21 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Cpn_vue_vue_type_template_id_709c3ca2_scoped_true___ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Cpn_vue_vue_type_script_lang_js___ = __webpack_require__(6);
-/* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__node_modules_vue_loader_lib_runtime_componentNormalizer_js__ = __webpack_require__(8);
-
-
-
-
-
-/* normalize component */
-
-var component = Object(__WEBPACK_IMPORTED_MODULE_2__node_modules_vue_loader_lib_runtime_componentNormalizer_js__["a" /* default */])(
-  __WEBPACK_IMPORTED_MODULE_1__Cpn_vue_vue_type_script_lang_js___["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_0__Cpn_vue_vue_type_template_id_709c3ca2_scoped_true___["a" /* render */],
-  __WEBPACK_IMPORTED_MODULE_0__Cpn_vue_vue_type_template_id_709c3ca2_scoped_true___["b" /* staticRenderFns */],
-  false,
-  null,
-  "709c3ca2",
-  null
-  
-)
-
-/* hot reload */
-if (false) {
-  var api = require("/home/dciwang/WebStormPrjecks/vue_learning/webpack的使用/04.webpack-vue/node_modules/vue-hot-reload-api/dist/index.js")
-  api.install(require('vue'))
-  if (api.compatible) {
-    module.hot.accept()
-    if (!api.isRecorded('709c3ca2')) {
-      api.createRecord('709c3ca2', component.options)
-    } else {
-      api.reload('709c3ca2', component.options)
-    }
-    module.hot.accept("./Cpn.vue?vue&type=template&id=709c3ca2&scoped=true&", function () {
-      api.rerender('709c3ca2', {
-        render: render,
-        staticRenderFns: staticRenderFns
-      })
-    })
-  }
-}
-component.options.__file = "src/vue/Cpn.vue"
-/* harmony default export */ __webpack_exports__["a"] = (component.exports);
-
-/***/ }),
-/* 22 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Cpn_vue_vue_type_template_id_709c3ca2_scoped_true___ = __webpack_require__(23);
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Cpn_vue_vue_type_template_id_709c3ca2_scoped_true___["a"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Cpn_vue_vue_type_template_id_709c3ca2_scoped_true___["b"]; });
-
-
-/***/ }),
-/* 23 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return staticRenderFns; });
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", [_vm._v(_vm._s(_vm.msg))])
-}
-var staticRenderFns = []
-render._withStripped = true
-
-
+throw new Error("Module build failed: Error: Cannot find module '/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/postcss/lib/postcss'. Please verify that the package.json has a valid \"main\" entry\n    at tryPackage (internal/modules/cjs/loader.js:333:19)\n    at Function.Module._findPath (internal/modules/cjs/loader.js:714:18)\n    at Function.Module._resolveFilename (internal/modules/cjs/loader.js:1067:27)\n    at Function.Module._load (internal/modules/cjs/loader.js:923:27)\n    at Module.require (internal/modules/cjs/loader.js:1140:19)\n    at require (internal/modules/cjs/helpers.js:75:18)\n    at Object.<anonymous> (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/@vue/component-compiler-utils/dist/compileStyle.js:7:17)\n    at Module._compile (internal/modules/cjs/loader.js:1251:30)\n    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1272:10)\n    at Module.load (internal/modules/cjs/loader.js:1100:32)\n    at Function.Module._load (internal/modules/cjs/loader.js:962:14)\n    at Module.require (internal/modules/cjs/loader.js:1140:19)\n    at require (internal/modules/cjs/helpers.js:75:18)\n    at Object.<anonymous> (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/@vue/component-compiler-utils/dist/index.js:8:24)\n    at Module._compile (internal/modules/cjs/loader.js:1251:30)\n    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1272:10)\n    at Module.load (internal/modules/cjs/loader.js:1100:32)\n    at Function.Module._load (internal/modules/cjs/loader.js:962:14)\n    at Module.require (internal/modules/cjs/loader.js:1140:19)\n    at require (internal/modules/cjs/helpers.js:75:18)\n    at Object.<anonymous> (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/vue-loader/lib/index.js:8:19)\n    at Module._compile (internal/modules/cjs/loader.js:1251:30)\n    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1272:10)\n    at Module.load (internal/modules/cjs/loader.js:1100:32)\n    at Function.Module._load (internal/modules/cjs/loader.js:962:14)\n    at Module.require (internal/modules/cjs/loader.js:1140:19)\n    at require (internal/modules/cjs/helpers.js:75:18)\n    at loadLoader (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/loader-runner/lib/loadLoader.js:18:17)\n    at iteratePitchingLoaders (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/loader-runner/lib/LoaderRunner.js:169:2)\n    at runLoaders (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/loader-runner/lib/LoaderRunner.js:365:2)\n    at NormalModule.doBuild (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/NormalModule.js:182:3)\n    at NormalModule.build (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/NormalModule.js:275:15)\n    at Compilation.buildModule (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/Compilation.js:157:10)\n    at factoryCallback (/Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/Compilation.js:348:12)\n    at /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/NormalModuleFactory.js:243:5\n    at /Users/wangcong/WebstormProjects/vue_leaning/webpack的使用/04.webpack-vue/node_modules/webpack/lib/NormalModuleFactory.js:94:13");
 
 /***/ })
 /******/ ]);
