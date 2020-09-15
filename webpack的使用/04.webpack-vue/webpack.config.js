@@ -1,4 +1,5 @@
 const path=require('path')
+const VueLoaderPlugin=require('vue-loader/lib/plugin')
 module.exports={
     /*入口*/
     entry:'./src/main.js',
@@ -46,5 +47,13 @@ module.exports={
                 use: ['vue-loader']
             }
         ]
-    }
+    },
+    resolve:{
+        alias:{
+            vue$:'vue/dist/vue.esm.js'
+        }
+    },
+    plugins:[
+        new VueLoaderPlugin(),
+    ]
 }

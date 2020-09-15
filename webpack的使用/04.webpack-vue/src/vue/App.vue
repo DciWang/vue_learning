@@ -1,17 +1,19 @@
 <template>
     <div>{{msg}}</div>
+    <cpn></cpn>
 </template>
 
 <script>
+    import cpn from './Cpn.vue'
     export default {
-        name: "",
+        name: "App",
         data(){
           return{
             msg:"Hello Vue.js"
           }
         },
-        component:{
-        
+        components:{
+            cpn
         }
     }
 </script>
