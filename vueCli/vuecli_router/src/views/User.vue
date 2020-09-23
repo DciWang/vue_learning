@@ -16,7 +16,7 @@
         },
         computed:{
             userId(){
-              return   this.$route.params.userId
+              return this.$route.params.userId
             }
 
         }

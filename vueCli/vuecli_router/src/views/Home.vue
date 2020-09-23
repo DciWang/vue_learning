@@ -3,7 +3,7 @@
         <h2>我是主业</h2>
         {{msg}}
         <hr>
-                <router-link to="/home/news">新闻</router-link>
+        <router-link to="/home/news">新闻</router-link>
         <router-link to="/home/messages">消息</router-link>
         <router-view></router-view>
     </div>
@@ -27,7 +27,6 @@
             this.path = this.$route.path
             next()
         }
-
     }
 </script>
 

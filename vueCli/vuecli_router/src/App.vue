@@ -15,11 +15,10 @@
         <!--<router-link :to="{path:'/profile',query:{id:'001',name:'DciWang',age:25}}" tag="button" active-class="active" replace>档案</router-link>-->
 <!--        query  给路由传递参数（ router-link 代码形式）-->
         <button @click="profileClick()" >档案</button>
-            <keep-alive>
+        <!--keep-alive  标签实现对组件的保持，不进行销毁， excloud和incloud实现正则匹配-->
+            <keep-alive excloud="Profile">
                 <router-view> </router-view>
             </keep-alive>
-
-
     </div>
 </template>
 <script>

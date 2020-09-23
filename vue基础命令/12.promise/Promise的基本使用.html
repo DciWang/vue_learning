@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--Promise 是异步编成的一种编成，当网络请求比较复杂时，，防止出现 地狱回调-->
+</head>
+<body>
+<div id="app">
+    <div>
+        <h2>{{message}}</h2>
+    </div>
+</div>
+<script src="../static/js/vue.js"></script>
+<script>
+    const app = new Vue({
+        el: "#app",
+        data: {
+            message: "你好哇！",
+        },
+        methods: {},
+        computed: {}
+
+    })
+    //什么情况下会用到Promise
+    //一般情况下有异步操作时，使用Promise对这个异步操作进行封装
+    //new ->构造函数（1.保存了一些状态信息，2.执行传入的函数）
+    //在执行传入的回调函数时，会传入两个参数，resolve，reject，它们本身有是函数
+    new Promise(((resolve, reject) => {
+        //传入异步请求
+        setTimeout(() => {
+            //成功的时候调用resolve，里面传成功返回的参数
+            // resolve('success');
+            //失败的时候调用reject，里面传失败返回的参数
+            reject('failed')
+        }, 1000)
+        //成功时数据处理代码
+    })).then(data => console.log(data))
+        //失败时数据处理代码
+        .catch(error => console.log(error))
+</script>
+
+</body>
+</html>

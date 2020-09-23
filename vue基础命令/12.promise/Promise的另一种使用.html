@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <div>
+        <h2>{{message}}</h2>
+    </div>
+</div>
+<script src="../static/js/vue.js"></script>
+<script>
+    const app =new Vue({
+        el:"#app",
+        data:{
+            message:"你好哇！",
+        },
+        methods:{
+
+        },
+        computed:{
+
+        }
+
+    })
+    new Promise(((resolve, reject) => {
+        setTimeout(()=>{
+            resolve('hello');
+            reject('error message')
+        },1000)
+        //成功喝失败的的处理代码并列在then里面
+    })).then( data => console.log(data),
+        error =>console.log(error))
+
+
+</script>
+
+</body>
+</html>
