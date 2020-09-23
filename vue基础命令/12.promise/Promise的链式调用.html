@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+
+    new Promise(((resolve, reject) => {
+        setTimeout(() => {
+            resolve()
+        }, 1000)
+    })).then(() => {
+        console.log("第一次请求")
+        new Promise(((resolve, reject) => {
+            setTimeout(() => {
+                resolve()
+            }, 1000)
+        })).then(() => {
+            console.log("第二次请求")
+            new Promise(((resolve, reject) => {
+                reject()
+            })).catch(() => {
+                console.log("error")
+            })
+        })
+    })
+    //简写
+    new Promise(((resolve, reject) => {
+        setTimeout(() => {
+            resolve("hello world")
+        }, 1000)
+    })).then(data => {
+        console.log(data)
+
+        return  Promise.resolve(data + '111')
+        }
+    ).then(data => {
+        console.log(data)
+        return  Promise.resolve(data + '222')
+    }).then(data => {
+        console.log(data)
+
+        return  Promise.reject(data + 'error')
+    }).catch(data => console.log(data))
+</script>
+
+</body>
+</html>
