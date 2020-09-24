@@ -2,15 +2,24 @@
     <div>
         {{cCount}}
         {{$store.state.counter}}
+
     </div>
 
 </template>
 
 <script>
     export default {
+        data(){
+            return{
+
+            }
+        },
         name: "HelloVueX",
         props:{
-            cCount: Number
+            cCount: Number,
+        },
+        methods:{
+
         }
     }
 </script>
