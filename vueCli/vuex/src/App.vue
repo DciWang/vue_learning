@@ -35,8 +35,8 @@
         <!--不推荐-->
         <button @click="increatmentClick()||$store.state.counter++">不推荐+</button>
         <button @click="decreatmentClick()||$store.state.counter--">不推荐-</button>
-        <button @click="addcount(5)">推荐+</button>
-        <button @click="delcount(5)">推荐-</button>
+        <button @click="addcounts(5)">推荐+</button>
+        <button @click="delcounts(5)">推荐-</button>
         <h1>-----HelloVue----</h1>
 
         <!--以父子组件的方式传数据-->
@@ -56,10 +56,10 @@
         },
         /*data 为负载 (payload)*/
         methods: {
-            addcount(payload) {
+            addcounts(payload) {
                 this.$store.commit("ADDCOUNT", payload)
             },
-            delcount(payload) {
+            delcounts(payload) {
                 this.$store.commit("delCount", payload)
             },
             pushPer() {
