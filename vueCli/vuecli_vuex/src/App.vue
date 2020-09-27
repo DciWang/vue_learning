@@ -50,7 +50,7 @@
         name: 'App',
         data() {
             return {
-                message: "你好哇， vuex",
+                message: "你好哇， vuecli_vuex",
                 count: 0
             }
         },

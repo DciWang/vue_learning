@@ -17,14 +17,14 @@ const state={
   info:{id:1,name:"DciWang",age:18}
 }
 
-//vuex 相当于java中的单例模式，用于组件的数据状态管理，比如头像、token等这样的数据,
+//vuecli_vuex 相当于java中的单例模式，用于组件的数据状态管理，比如头像、token等这样的数据,
 export default new Vuex.Store({
   //用于保存状态（数据）,相当于单页面的 data属性
   //在一个项目种只new 一个Vuex.Store 保持 state的单一性
   state,
   //用于需要经过处理的状态(数据)，相当于单页面种的 computed 属性
   getters,
-  //状态更新，vuex.store状态的唯一提交方式：提交mutation
+  //状态更新，vuecli_vuex.store状态的唯一提交方式：提交mutation
   //不要在里面进行任何异步操作
   mutations,
   //类似mutations，主要处理异步操作,但是不能直接修改state的制
